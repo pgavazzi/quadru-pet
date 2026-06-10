@@ -31,6 +31,10 @@ interface AppState {
   view: ViewOptions;
   setView: (v: Partial<ViewOptions>) => void;
 
+  /** hind-assist configuration: front leg rigs removed, 6 actuators instead of 12 */
+  hindAssist: boolean;
+  setHindAssist: (on: boolean) => void;
+
   sizeClass: SizeClass;
   fit: Measurements;
   /** select a breed size class and load its default measurements */
@@ -64,6 +68,14 @@ export const useStore = create<AppState>((set) => ({
     ledColor: '#22d3ee',
   },
   setView: (v) => set((s) => ({ view: { ...s.view, ...v } })),
+
+  hindAssist: false,
+  setHindAssist: (hindAssist) =>
+    set((s) => ({
+      hindAssist,
+      // front actuators no longer exist in hind-assist config
+      selection: hindAssist && /^F[LR]_/.test(s.selection ?? '') ? null : s.selection,
+    })),
 
   sizeClass: 'medium',
   fit: { ...SIZE_CLASS_BY_ID.medium.m },

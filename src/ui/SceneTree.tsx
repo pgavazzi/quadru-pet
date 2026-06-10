@@ -27,17 +27,19 @@ function Node({
 }
 
 export function SceneTree() {
+  const hindAssist = useStore((s) => s.hindAssist);
   const spineParts = PARTS.filter((p) => p.id !== 'dog');
+  const legs = LEGS.filter((l) => !(hindAssist && l.front));
   return (
     <div className="scene-tree">
       <h2 className="panel-title">Scene</h2>
       <div className="tree-node root">
-        <span className="tree-icon">▣</span> Exoskeleton
+        <span className="tree-icon">▣</span> Exoskeleton{hindAssist ? ' (hind-assist)' : ''}
       </div>
       {spineParts.map((p) => (
         <Node key={p.id} id={p.id} label={p.label} depth={1} icon="▢" />
       ))}
-      {LEGS.map((leg) => (
+      {legs.map((leg) => (
         <div key={leg.id}>
           <div className="tree-node group" style={{ paddingLeft: 24 }}>
             <span className="tree-icon">┗</span> {leg.label}

@@ -30,6 +30,7 @@ function Bar({ from, to, r }: { from: [number, number, number]; to: [number, num
 function Spine() {
   const select = useStore((s) => s.select);
   const exploded = useStore((s) => s.view.exploded);
+  const hindAssist = useStore((s) => s.hindAssist);
   const { lengthF, girthF } = useFitFactors();
   // keep the rail resting on the back when the chest girth changes
   const railLift = 0.14 * (girthF - 1);
@@ -91,8 +92,8 @@ function Spine() {
         </mesh>
       </group>
 
-      {/* rail → leg-mount struts */}
-      {LEGS.map((l) => (
+      {/* rail → leg-mount struts (front rigs absent in hind-assist config) */}
+      {LEGS.filter((l) => !(hindAssist && l.front)).map((l) => (
         <Bar
           key={l.id}
           from={[l.side * 0.04, 0.585 + railLift, l.mount[2] * lengthF]}

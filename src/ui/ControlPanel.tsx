@@ -34,10 +34,26 @@ function JointSlider({ joint, disabled }: { joint: JointDef; disabled: boolean }
 function ActuatorsTab() {
   const playing = useStore((s) => s.playing);
   const resetPose = useStore((s) => s.resetPose);
+  const hindAssist = useStore((s) => s.hindAssist);
+  const setHindAssist = useStore((s) => s.setHindAssist);
+  const legs = LEGS.filter((l) => !(hindAssist && l.front));
   return (
     <div className="tab-body">
+      <div className="config-switch">
+        <button className={!hindAssist ? 'active' : ''} onClick={() => setHindAssist(false)}>
+          Full body · 12
+        </button>
+        <button className={hindAssist ? 'active' : ''} onClick={() => setHindAssist(true)}>
+          Hind-assist · 6
+        </button>
+      </div>
+      {hindAssist && (
+        <p className="hint">
+          Cost-reduced configuration: no front leg rigs. The dog's own front legs move freely.
+        </p>
+      )}
       {playing && <p className="hint">Pause playback to pose joints manually.</p>}
-      {LEGS.map((leg) => (
+      {legs.map((leg) => (
         <section key={leg.id} className="leg-group">
           <h3>
             {leg.label} <span className="leg-id">{leg.id}</span>

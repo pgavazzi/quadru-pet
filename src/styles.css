@@ -204,6 +204,29 @@ input[type='range']:disabled { accent-color: var(--muted); }
 }
 .swatch.active { border-color: var(--text); }
 
+/* ---------- configuration switch ---------- */
+.config-switch {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.config-switch button {
+  flex: 1;
+  background: var(--panel-2);
+  border: none;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 9px 0;
+  cursor: pointer;
+}
+.config-switch button.active {
+  background: var(--accent);
+  color: #06212a;
+}
+
 /* ---------- fit tab ---------- */
 .size-grid {
   display: grid;

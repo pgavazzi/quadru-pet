@@ -83,7 +83,7 @@ export interface PartDef {
 
 export const PARTS: PartDef[] = [
   { id: 'spine_rail', label: 'Dorsal Spine Rail', mass: '0.84 kg', material: 'Carbon fiber / 7075-T6', desc: 'Segmented load-bearing rail distributing actuator reaction forces along the back.' },
-  { id: 'battery', label: 'Battery Pack', mass: '1.20 kg', material: 'Li-ion 6S 48 Wh', desc: 'Hot-swappable rear power module. Feeds all 12 actuators via the spine bus.' },
+  { id: 'battery', label: 'Battery Pack', mass: '1.20 kg', material: 'Li-ion 6S 48 Wh', desc: 'Hot-swappable rear power module. Feeds the actuators via the spine bus.' },
   { id: 'controller', label: 'Gait Controller', mass: '0.31 kg', material: 'PA12 nylon shell', desc: 'IMU + motor controller pod. Runs the gait generator at 500 Hz.' },
   { id: 'harness_front', label: 'Chest Harness', mass: '0.18 kg', material: 'TPU / nylon webbing', desc: 'Padded front strap transferring load to the sternum.' },
   { id: 'harness_rear', label: 'Belly Harness', mass: '0.16 kg', material: 'TPU / nylon webbing', desc: 'Rear strap stabilizing the rail over the lumbar spine.' },
