@@ -21,6 +21,11 @@ from it; nothing talks component-to-component.
   to resize or re-pose the robot, edit here, not the meshes.
 - `src/model/gaits.ts` — pure functions `sampleGait(gait, t, joint)` and
   `sampleBodyPose(gait, t)` returning target angles/pose. No three.js imports.
+- `src/model/fit.ts` — breed size classes (Toy→Giant) and measurements (cm).
+  `fitFactors()` maps withers/length/girth to a uniform model scale plus
+  relative trunk stretch (`lengthF`) and thickness (`girthF`) factors, consumed
+  in the scene via `useFitFactors()` from store.ts. Geometry constants stay
+  modeled at `BASE` (50 cm withers); never bake size into skeleton.ts.
 - `src/scene/` — R3F components. `Viewport.tsx` owns the Canvas, lighting,
   postprocessing, and `GaitDriver` (eases store angles toward gait targets each
   frame). `LegRig.tsx` is the kinematic chain; joint rotations are applied
