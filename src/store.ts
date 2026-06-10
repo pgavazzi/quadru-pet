@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { restAngles, type JointId } from './model/skeleton';
 import type { GaitId } from './model/gaits';
+import { fitFactors, SIZE_CLASS_BY_ID, type Measurements, type SizeClass } from './model/fit';
 
 export interface ViewOptions {
   exploded: number;     // 0..1
@@ -29,6 +30,13 @@ interface AppState {
 
   view: ViewOptions;
   setView: (v: Partial<ViewOptions>) => void;
+
+  sizeClass: SizeClass;
+  fit: Measurements;
+  /** select a breed size class and load its default measurements */
+  setSizeClass: (c: SizeClass) => void;
+  /** override individual measurements (cm) */
+  setFit: (m: Partial<Measurements>) => void;
 }
 
 export const useStore = create<AppState>((set) => ({
@@ -56,4 +64,12 @@ export const useStore = create<AppState>((set) => ({
     ledColor: '#22d3ee',
   },
   setView: (v) => set((s) => ({ view: { ...s.view, ...v } })),
+
+  sizeClass: 'medium',
+  fit: { ...SIZE_CLASS_BY_ID.medium.m },
+  setSizeClass: (c) => set({ sizeClass: c, fit: { ...SIZE_CLASS_BY_ID[c].m } }),
+  setFit: (m) => set((s) => ({ fit: { ...s.fit, ...m } })),
 }));
+
+/** Derived scale/stretch factors for the current measurements. */
+export const useFitFactors = () => fitFactors(useStore((s) => s.fit));

@@ -12,7 +12,7 @@ import {
 import { Bloom, EffectComposer } from '@react-three/postprocessing';
 import { JOINTS, type JointId } from '../model/skeleton';
 import { sampleBodyPose, sampleGait } from '../model/gaits';
-import { useStore } from '../store';
+import { useFitFactors, useStore } from '../store';
 import { setDogOpacity, setLedColor, setWireframe } from './materials';
 import { ExoModel } from './Exoskeleton';
 
@@ -55,6 +55,7 @@ function ViewController() {
 
 export function Viewport() {
   const select = useStore((s) => s.select);
+  const { scale } = useFitFactors();
   return (
     <Canvas
       shadows="percentage"
@@ -98,7 +99,7 @@ export function Viewport() {
       <OrbitControls
         makeDefault
         enableDamping
-        target={[0, 0.38, 0]}
+        target={[0, 0.38 * scale, 0]}
         minDistance={0.6}
         maxDistance={6}
         maxPolarAngle={Math.PI * 0.55}

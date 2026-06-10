@@ -1,5 +1,5 @@
 import { mats } from './materials';
-import { useStore } from '../store';
+import { useFitFactors, useStore } from '../store';
 import type { ThreeEvent } from '@react-three/fiber';
 
 /**
@@ -8,6 +8,7 @@ import type { ThreeEvent } from '@react-three/fiber';
  */
 export function DogBody() {
   const select = useStore((s) => s.select);
+  const { lengthF, girthF } = useFitFactors();
   const onClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     select('dog');
@@ -15,26 +16,34 @@ export function DogBody() {
 
   return (
     <group onClick={onClick}>
-      {/* torso */}
-      <mesh material={mats.dog} position={[0, 0.44, -0.01]} rotation-x={Math.PI / 2} castShadow>
-        <capsuleGeometry args={[0.122, 0.38, 8, 20]} />
-      </mesh>
-      {/* chest */}
-      <mesh material={mats.dog} position={[0, 0.43, 0.23]} castShadow>
-        <sphereGeometry args={[0.128, 18, 14]} />
-      </mesh>
-      {/* haunches */}
-      {[1, -1].map((s) => (
-        <mesh key={s} material={mats.dog} position={[s * 0.08, 0.435, -0.245]} castShadow>
-          <sphereGeometry args={[0.085, 16, 12]} />
+      {/* trunk: stretched by body length, thickened by chest girth.
+          Centered at spine height so the scale doesn't shift it vertically. */}
+      <group position={[0, 0.44, 0]} scale={[girthF, girthF, lengthF]}>
+        {/* torso */}
+        <mesh material={mats.dog} position={[0, 0, -0.01]} rotation-x={Math.PI / 2} castShadow>
+          <capsuleGeometry args={[0.122, 0.38, 8, 20]} />
         </mesh>
-      ))}
+        {/* chest */}
+        <mesh material={mats.dog} position={[0, -0.01, 0.23]} castShadow>
+          <sphereGeometry args={[0.128, 18, 14]} />
+        </mesh>
+        {/* haunches */}
+        {[1, -1].map((s) => (
+          <mesh key={s} material={mats.dog} position={[s * 0.08, -0.005, -0.245]} castShadow>
+            <sphereGeometry args={[0.085, 16, 12]} />
+          </mesh>
+        ))}
+        {/* tail */}
+        <mesh material={mats.dogDark} position={[0, 0.09, -0.33]} rotation-x={0.9} castShadow>
+          <capsuleGeometry args={[0.018, 0.16, 6, 10]} />
+        </mesh>
+      </group>
       {/* neck */}
-      <mesh material={mats.dog} position={[0, 0.55, 0.32]} rotation-x={-0.7} castShadow>
+      <mesh material={mats.dog} position={[0, 0.55, 0.32 * lengthF]} rotation-x={-0.7} castShadow>
         <cylinderGeometry args={[0.055, 0.085, 0.18, 14]} />
       </mesh>
       {/* head */}
-      <group position={[0, 0.65, 0.4]}>
+      <group position={[0, 0.65, 0.32 * lengthF + 0.08]}>
         <mesh material={mats.dog} castShadow>
           <sphereGeometry args={[0.085, 18, 14]} />
         </mesh>
@@ -59,10 +68,6 @@ export function DogBody() {
           </mesh>
         ))}
       </group>
-      {/* tail */}
-      <mesh material={mats.dogDark} position={[0, 0.53, -0.33]} rotation-x={0.9} castShadow>
-        <capsuleGeometry args={[0.018, 0.16, 6, 10]} />
-      </mesh>
     </group>
   );
 }

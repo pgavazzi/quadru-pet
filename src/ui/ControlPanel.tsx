@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LEGS, type JointDef } from '../model/skeleton';
 import { GAITS } from '../model/gaits';
+import { isCustom, MEASUREMENT_RANGES, SIZE_CLASS_BY_ID, SIZE_CLASSES, type Measurements } from '../model/fit';
 import { useStore } from '../store';
 
 const LED_COLORS = ['#22d3ee', '#4ade80', '#f97316', '#e11d48', '#a78bfa'];
@@ -131,7 +132,63 @@ function ViewTab() {
   );
 }
 
-const TABS = ['Actuators', 'Gaits', 'View'] as const;
+const MEASUREMENT_LABELS: Record<keyof Measurements, string> = {
+  withers: 'Withers height',
+  length: 'Body length',
+  girth: 'Chest girth',
+};
+
+function FitTab() {
+  const sizeClass = useStore((s) => s.sizeClass);
+  const fit = useStore((s) => s.fit);
+  const setSizeClass = useStore((s) => s.setSizeClass);
+  const setFit = useStore((s) => s.setFit);
+  const custom = isCustom(fit, sizeClass);
+
+  return (
+    <div className="tab-body">
+      <p className="hint">Pick a breed size, then fine-tune with the dog's real measurements.</p>
+      <div className="size-grid">
+        {SIZE_CLASSES.map((c) => (
+          <button
+            key={c.id}
+            className={`size-chip ${sizeClass === c.id && !custom ? 'active' : ''}`}
+            onClick={() => setSizeClass(c.id)}
+            title={c.desc}
+          >
+            <span className="size-label">{c.label}</span>
+            <span className="size-desc">{c.desc}</span>
+          </button>
+        ))}
+      </div>
+      {custom && (
+        <p className="hint custom-note">
+          Custom fit (based on {SIZE_CLASS_BY_ID[sizeClass].label})
+        </p>
+      )}
+      {(Object.keys(MEASUREMENT_LABELS) as (keyof Measurements)[]).map((key) => {
+        const [min, max] = MEASUREMENT_RANGES[key];
+        return (
+          <div className="joint-row" key={key}>
+            <div className="joint-row-top">
+              <span className="joint-label">{MEASUREMENT_LABELS[key]}</span>
+              <span className="joint-value">{fit[key]} cm</span>
+            </div>
+            <input
+              type="range" min={min} max={max} step={1} value={fit[key]}
+              onChange={(e) => setFit({ [key]: Number(e.target.value) })}
+            />
+          </div>
+        );
+      })}
+      <button className="btn wide" onClick={() => setSizeClass(sizeClass)} disabled={!custom}>
+        Reset to {SIZE_CLASS_BY_ID[sizeClass].label} defaults
+      </button>
+    </div>
+  );
+}
+
+const TABS = ['Actuators', 'Gaits', 'Fit', 'View'] as const;
 
 export function ControlPanel() {
   const [tab, setTab] = useState<(typeof TABS)[number]>('Actuators');
@@ -146,6 +203,7 @@ export function ControlPanel() {
       </nav>
       {tab === 'Actuators' && <ActuatorsTab />}
       {tab === 'Gaits' && <GaitsTab />}
+      {tab === 'Fit' && <FitTab />}
       {tab === 'View' && <ViewTab />}
     </aside>
   );

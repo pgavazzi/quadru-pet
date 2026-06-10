@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { Group } from 'three';
 import { DEG, type JointDef, type LegDef } from '../model/skeleton';
-import { useStore } from '../store';
+import { useFitFactors, useStore } from '../store';
 import { Actuator } from './Actuator';
 import { mats } from './materials';
 
@@ -51,6 +51,7 @@ export function LegRig({ leg }: { leg: LegDef }) {
   const j1 = useRef<Group>(null);
   const j2 = useRef<Group>(null);
   const exploded = useStore((s) => s.view.exploded);
+  const { lengthF, girthF } = useFitFactors();
   const [a, b, c] = leg.joints;
 
   useFrame(() => {
@@ -64,7 +65,7 @@ export function LegRig({ leg }: { leg: LegDef }) {
   const ex = (level: number): [number, number, number] => [leg.side * exploded * (0.05 + level * 0.045), 0, 0];
 
   return (
-    <group position={leg.mount}>
+    <group position={[leg.mount[0] * girthF, leg.mount[1], leg.mount[2] * lengthF]}>
       <group position={ex(0)}>
         <group ref={j0}>
           <Actuator joint={a} side={leg.side} />
