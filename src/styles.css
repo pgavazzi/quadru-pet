@@ -1,0 +1,261 @@
+:root {
+  --bg: #0b0e13;
+  --panel: #11151c;
+  --panel-2: #171c25;
+  --border: #232a36;
+  --text: #e6e9ef;
+  --muted: #8b94a7;
+  --accent: #22d3ee;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* ---------- top bar ---------- */
+.topbar {
+  height: 52px;
+  flex: 0 0 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+.brand-name { font-weight: 700; letter-spacing: 0.12em; font-size: 14px; }
+.brand-sub { color: var(--muted); font-size: 12px; }
+
+.topbar-center { display: flex; align-items: center; gap: 12px; }
+.status-pill {
+  font-size: 12px;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+.status-pill.live { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- layout ---------- */
+.layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 300px 1fr 300px;
+  min-height: 0;
+}
+
+.panel {
+  background: var(--panel);
+  overflow-y: auto;
+  min-height: 0;
+}
+.panel.left { border-right: 1px solid var(--border); }
+.panel.right { border-left: 1px solid var(--border); display: flex; flex-direction: column; }
+
+.viewport { position: relative; min-width: 0; }
+.viewport canvas { display: block; }
+
+.selection-chip {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(11, 14, 19, 0.82);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-size: 12px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+/* ---------- buttons & tabs ---------- */
+.btn {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn.ghost { background: transparent; }
+.btn.wide { width: 100%; margin-top: 10px; padding: 9px; }
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  z-index: 1;
+}
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 11px 0;
+  cursor: pointer;
+}
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.tab-body { padding: 14px; }
+
+/* ---------- actuator sliders ---------- */
+.leg-group { margin-bottom: 16px; }
+.leg-group h3 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin: 0 0 8px;
+}
+.leg-id {
+  float: right;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.joint-row {
+  padding: 7px 9px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.joint-row.selected { background: var(--panel-2); outline: 1px solid var(--border); }
+.joint-row-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+.joint-label { color: var(--text); }
+.joint-value { color: var(--accent); font-variant-numeric: tabular-nums; }
+
+input[type='range'] {
+  width: 100%;
+  accent-color: var(--accent);
+  height: 4px;
+}
+input[type='range']:disabled { accent-color: var(--muted); }
+
+.hint { color: var(--muted); font-size: 12px; line-height: 1.5; }
+
+/* ---------- gait cards ---------- */
+.gait-card {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  text-align: left;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 13px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  color: var(--text);
+}
+.gait-card:hover { border-color: var(--muted); }
+.gait-card.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+.gait-name { font-size: 13px; font-weight: 600; }
+.gait-desc { font-size: 11px; color: var(--muted); }
+
+/* ---------- view tab ---------- */
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  padding: 9px;
+}
+.toggle-row input { accent-color: var(--accent); }
+
+.swatch-row { padding: 9px; }
+.swatches { display: flex; gap: 8px; margin-top: 8px; }
+.swatch {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+.swatch.active { border-color: var(--text); }
+
+/* ---------- scene tree ---------- */
+.scene-tree { padding: 14px 8px; border-bottom: 1px solid var(--border); }
+.panel-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin: 0 0 10px;
+  padding: 0 6px;
+}
+.tree-node {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 5px;
+  color: var(--text);
+  font-size: 12px;
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tree-node:hover { background: var(--panel-2); }
+.tree-node.selected { background: var(--panel-2); color: var(--accent); }
+.tree-node.root, .tree-node.group { color: var(--muted); cursor: default; }
+.tree-icon { margin-right: 7px; opacity: 0.7; font-size: 10px; }
+
+/* ---------- properties ---------- */
+.props { padding: 14px; }
+.prop-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 6px 6px;
+  border-bottom: 1px solid var(--border);
+}
+.prop-key { color: var(--muted); }
+.prop-val { font-variant-numeric: tabular-nums; }
+
+.range-viz {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--panel-2);
+  margin: 6px 6px 10px;
+  overflow: hidden;
+}
+.range-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 80ms linear;
+}

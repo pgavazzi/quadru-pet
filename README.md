@@ -1,73 +1,34 @@
-# React + TypeScript + Vite
+# QuadruPet 🐕‍🦺
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive 3D configurator for a **canine exoskeleton** — a 12-actuator
+assistive robotic frame worn by a dog. Built with Vite, React, TypeScript and
+three.js (react-three-fiber).
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Full kinematic model** — 4 legs × 3 actuated joints (shoulder/elbow/carpus,
+  hip/stifle/hock) with anatomical joint limits, real parent→child chains, and
+  a passive dog body wearing the frame
+- **Per-actuator control** — 12 sliders grouped by leg with live angle readouts
+- **Gait playback** — Idle, Walk (4-beat), Trot (2-beat diagonal), Sit and
+  Shake-a-paw, generated kinematically with phase-offset curves and body pitch
+- **Scene tree + properties** — click any actuator or component (viewport or
+  tree) for simulated telemetry: torque, current, temperature
+- **Service views** — exploded view, dog-body opacity, wireframe, turntable,
+  status-LED color
+- **Rendering** — PBR materials with procedural carbon fiber, environment
+  lighting, contact shadows, and bloom on the LED rings
 
-## React Compiler
+## Run it
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```sh
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## How it works
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Joint definitions live in `src/model/skeleton.ts`; gaits are pure functions in
+`src/model/gaits.ts` sampled each frame by a driver that eases the zustand
+store's angles toward the targets. See [CLAUDE.md](CLAUDE.md) for the full
+architecture notes.
