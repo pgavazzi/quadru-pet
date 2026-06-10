@@ -37,7 +37,9 @@ interface CycleParams {
 
 function cyclic(joint: JointDef, t: number, phase: Record<LegId, number>, p: CycleParams): number {
   const ph = t * p.freq + phase[joint.leg];
-  if (joint.index === 0) return joint.rest + p.swingAmp * Math.sin(TAU * ph);
+  // Positive rotation.x moves the paw backward, so the swing term is negated:
+  // the paw must travel forward while lifted (swing) and backward while planted (stance).
+  if (joint.index === 0) return joint.rest - p.swingAmp * Math.sin(TAU * ph);
   // Flex slightly ahead of the swing apex so the paw clears the ground
   const amp = joint.index === 1 ? p.midAmp : p.distalAmp;
   return joint.rest + joint.flexDir * amp * lift(ph + 0.12);
