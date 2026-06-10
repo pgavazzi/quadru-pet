@@ -38,8 +38,8 @@ export function DogBody() {
           <capsuleGeometry args={[0.018, 0.16, 6, 10]} />
         </mesh>
       </group>
-      {/* neck */}
-      <mesh material={mats.dog} position={[0, 0.55, 0.32 * lengthF]} rotation-x={-0.7} castShadow>
+      {/* neck: leans forward from the chest up to the head */}
+      <mesh material={mats.dog} position={[0, 0.55, 0.32 * lengthF]} rotation-x={0.7} castShadow>
         <cylinderGeometry args={[0.055, 0.085, 0.18, 14]} />
       </mesh>
       {/* head */}
